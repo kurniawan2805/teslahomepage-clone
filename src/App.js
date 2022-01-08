@@ -1,23 +1,41 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [data, setdata] = useState({ hits: []});
+
+  useEffect(() => {
+    const fetchData =async () => {
+      // const result =
+      await axios.get(
+        'https://hn.algolia.com/api/v1/search?query=react',
+      ).then(res => {
+        // console.log(res);
+        setdata(res.data);
+      }).catch(err => {
+        console.log("Err: ", err);
+      })
+      // setdata(result.data);
+    };
+    fetchData();
+    // return () => {
+    //   cleanup
+    // }
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello</h1>
+      <ul>
+        {data.hits.map(item => {
+          return (
+          <li key={item.objectID}>
+            <a href={item.url}>{item.title}</a> by {item.author}
+          </li>
+          );
+        })}     
+      </ul>
     </div>
   );
 }
